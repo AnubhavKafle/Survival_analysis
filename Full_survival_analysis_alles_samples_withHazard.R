@@ -38,9 +38,9 @@ rownames(clinical_survival)= rownames(clinical_match)#Matching rownames
 expression_rna_ordered = expression_rna[rownames(clinical_survival),] #Creating expression matrix ordered according to rownames of clinical_match
 ######## NOT NEEDED #######clinical_Survival=as.data.frame(days_todeath=ifelse(is.na(clinical$days_to_death),as.numeric(as.character(clinical$days_to_last_followup)),as.numeric(as.character(clinical$days_to_death))),event=as.numeric(as.character(clinical$vital_status)),row.names=rownames(clinical))
 
-###LOG2FC###expression_rna_ordered_log2 = log2(t(apply(t(apply(expression_rna_ordered,1,as.numeric)), 1, function(i) i+1 ))) 
+expression_rna_ordered_log2 = log2(t(apply(t(apply(expression_rna_ordered,1,as.numeric)), 1, function(i) i+1 ))) 
 
-######colnames(expression_rna_ordered_log2) = colnames(expression_rna_ordered)
+colnames(expression_rna_ordered_log2) = colnames(expression_rna_ordered)
 
 results_coxph=list() #Creating a result list
 
