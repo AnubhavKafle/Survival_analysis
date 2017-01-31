@@ -36,8 +36,6 @@ write.table(BLCA_Normal,file="BLCA_Normal_Matched.txt",sep="\t",row.names=F)
 
 #############################################################
 
-library(DESeq2)
-
 
 
 
