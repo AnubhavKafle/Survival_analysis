@@ -102,7 +102,7 @@ for (number in 1:length(total_gene_list))
 
 Sys.time()
 
-return(list(as.numeric(as.matrix(P_values_matched_genes)), names(P_values_matched_genes), as.numeric(as.matrix(hazard_ration_geneName)))) #Return as a list to the function call assignment variable
+return(list(as.numeric(as.matrix(P_values_matched_genes)), names(P_values_matched_genes), as.numeric(as.matrix(hazard_ratio_geneName)))) #Return as a list to the function call assignment variable
 
 }
 
