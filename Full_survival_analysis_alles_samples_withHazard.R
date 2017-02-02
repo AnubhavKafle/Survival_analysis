@@ -91,7 +91,7 @@ for( ii in 1:length(gene_names))
   
 }
  
-p_values_matched_genes = list() 
+P_values_matched_genes = list() 
 
 for (number in 1:length(total_gene_list))
 {
