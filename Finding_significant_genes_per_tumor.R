@@ -17,7 +17,7 @@ for ( i in 1:length(colnames(cox_hazardRatio)))
       genes_significantP_greaterHazard[[rownames(cox_pvalues)[j]]] = c(cox_pvalues[j,i], cox_hazardRatio[j,i])
     }
   }
-  significant_genes = as.matrix(genes_significantP_greaterHazard[[]][2])
+  significant_genes = as.matrix(genes_significantP_greaterHazard)
   
   write.table(significant_genes, file = paste(colnames(cox_hazardRatio)[i],".txt"), sep = "\t")
 }
