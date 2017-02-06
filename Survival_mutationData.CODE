@@ -6,9 +6,9 @@ mv filtered* ./Mu
 rename 's/filtered_Filtered_/Filtered_/' filtered*
 for i in $(ls *.txt) ; do  sed 's/Tumor_Sample_Barcode/Patience_ID/g' $i >> "tested_"$i; done
 rm Filtered*
-cd Mu/
-rename 's/tested_//g' tested_Filtered_*
-
+for i in $(ls *.txt) ; do  sed 's/-/./g' $i >> "point_"$i; done
+rm tested*
+rename 's/point_//g' point_*
 ########################################
 #### R code for survival analysis  for the mutation data
 ACC = read.table("ACC-Mutations-AllSamples.txt", head =T, sep="\t")
@@ -69,6 +69,13 @@ for(j in names(genes_acc))
 
 }
   
+results_coxph=list() #Creating a result list
 
+for (genes in names(survival_mutation_matrix))
+{
+  model_analysis = summary(coxph(Surv(clinical_survival$days_to_death,clinical_survival$event) ~ as.factor(survival_mutation_matrix[[genes]][]))) #P-value is 5th in the index of coefficient. Coxph model is used because of the continous event of gene expression
+  
+  results_coxph[[genes]] = c(model_analysis$coefficients[5], model_analysis$coefficients[2])
+}
 
 
