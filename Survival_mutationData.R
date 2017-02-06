@@ -17,6 +17,7 @@ rename 's/point_//g' point_*
 library(survival)
 ACC = read.table("ACC-Mutations-AllSamples.txt", head =T, sep="\t")
 unique_genes = as.character(unique(ACC$Hugo_Symbol))
+unique_genes = unique_genes[order(unique_genes)]
 genes_acc = list()
 #unique(as.character(ACC[rownames(ACC[which(ACC$Hugo_Symbol=="NOL9"),]),3]))
 
@@ -87,3 +88,4 @@ coxph_results = t(as.data.frame(results_coxph))
 colnames(coxph_results)= c("P_values", "Hazard_ratio")
 
 write.table(coxph_results, file = "ACC_Mutation.txt", sep = '\t', row.names = T)
+#write.table(significant_genes, file = paste(colnames(cox_hazardRatio)[i],".txt"), sep = "\t")
