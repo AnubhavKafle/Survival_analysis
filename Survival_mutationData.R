@@ -10,6 +10,24 @@ rename 's/tested_//g' tested_Filtered_*
 
 ########################################
 #### R code for survival analysis  for the mutation data
+ACC = read.table("ACC-Mutations-AllSamples.txt", head =T, sep="\t")
+unique_genes = as.character(unique(ACC$Hugo_Symbol))
+genes_acc = list()
+#unique(as.character(ACC[rownames(ACC[which(ACC$Hugo_Symbol=="NOL9"),]),3]))
+
+for(i in unique_genes)
+{
+  genes_acc[[i]] = unique(as.character(ACC[rownames(ACC[which(ACC$Hugo_Symbol==i),]),3]))
+}
+
+mutation_matrix = list()
+for ( i in names(genes_acc))
+{
+  
+  mutation_matrix[[i]] = cbind(rep(1,length(genes_acc[[i]])))
+  rownames(mutation_matrix[[i]]) = as.character(genes_acc[[i]])
+  
+}
 
 
 
