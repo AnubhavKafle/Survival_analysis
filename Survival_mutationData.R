@@ -57,14 +57,16 @@ status = c()
 
 for(j in names(genes_acc))
 {
+  status = c()
   
   for(i in rownames(clinical_survival))
   {
-    status = ifelse( i %in% genes_acc[[j]][], 1, 0) 
+    status = c(status, ifelse( i %in% genes_acc[[j]][], 1, 0)) 
   }
   
   survival_mutation_matrix[[j]] = cbind(status)
   rownames(survival_mutation_matrix[[j]]) = rownames(clinical_survival)
+
 }
   
 
