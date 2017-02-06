@@ -1,4 +1,5 @@
-###### This is to format the file suitable for Surivival analysis.Done in BASH SHELL ########
+###### This is to format the file suitable for Surivival analysis########
+###   Done in BASH SHELL   ####
 for i in $(ls *.txt) ; do awk -F'\t' '{print ($1,$9,tolower($16)) }' $i | grep -v -E "Silent|RNA" | sed 's/ /\t/g'  >> "Filtered_"$i; done 
 for i in $(ls Filtered*) ; do  cut -d"-" -f1,2,3 $i >> "filtered_"$i; done
 rm Filtered*
@@ -9,8 +10,11 @@ rm Filtered*
 for i in $(ls *.txt) ; do  sed 's/-/./g' $i >> "point_"$i; done
 rm tested*
 rename 's/point_//g' point_*
-########################################
-#### R code for survival analysis  for the mutation data
+
+###########################################################
+#### R code for survival analysis  for the mutation data###
+###########################################################
+library(survival)
 ACC = read.table("ACC-Mutations-AllSamples.txt", head =T, sep="\t")
 unique_genes = as.character(unique(ACC$Hugo_Symbol))
 genes_acc = list()
@@ -78,4 +82,8 @@ for (genes in names(survival_mutation_matrix))
   results_coxph[[genes]] = c(model_analysis$coefficients[5], model_analysis$coefficients[2])
 }
 
+coxph_results = t(as.data.frame(results_coxph))
 
+colnames(coxph_results)= c("P_values", "Hazard_ratio")
+
+write.table(coxph_results, file = "ACC_Mutation.txt", sep = '\t', row.names = T)
