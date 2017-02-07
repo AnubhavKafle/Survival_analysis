@@ -107,9 +107,9 @@ Mutation_survival = function(ACC, clinical_data)
 for ( i in TCGA_Samples)
   {
   
-    Cancer_Mutation = read.table(list.files("~/Desktop/labRotation1_Anubh",pattern=i,full.names = T),header=T,sep="\t")
+    Cancer_Mutation = read.table(list.files("~/Desktop/labRotation1_Anubhav",pattern=i,full.names = T),header=T,sep="\t")
   
-    clinical_data = t(read.table(list.files("~/Desktop/labRotation1_AnubhavK/Clinical_Firehose/",pattern=i,full.names = T),header=T,sep="\t",row.names = 1))[,-1]
+    clinical_data = t(read.table(list.files("~/Desktop/labRotation1_AnubhavK/Clinical/",pattern=i,full.names = T),header=T,sep="\t",row.names = 1))[,-1]
   
     survival_results = Mutation_survival(Cancer_Mutation,clinical_data)
   
