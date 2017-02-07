@@ -81,12 +81,17 @@ Mutation_survival = function(ACC, clinical_data)
   
   results_coxph = list() #Creating a result list
 
-  for (genes in names(survival_mutation_matrix))
-    {
+ for (genes in names(survival_mutation_matrix))
+  {
+    if ( sum(survival_mutation_matrix[[genes]][]) > 0 )
+      
+    {  
       model_analysis = summary(coxph(Surv(clinical_survival$days_to_death,clinical_survival$event) ~ as.factor(survival_mutation_matrix[[genes]][]))) #P-value is 5th in the index of coefficient. Coxph model is used because of the continous event of gene expression
-  
+      
       results_coxph[[genes]] = c(model_analysis$coefficients[5], model_analysis$coefficients[2])
     }
+    
+  }
 
   coxph_results = t(as.data.frame(results_coxph))
 
@@ -102,7 +107,7 @@ Mutation_survival = function(ACC, clinical_data)
 for ( i in TCGA_Samples)
   {
   
-    Cancer_Mutation = t(read.table(list.files("~/Desktop/labRotation1_Anubh",pattern=i,full.names = T),header=T,sep="\t",row.names=1))[,-1]
+    Cancer_Mutation = read.table(list.files("~/Desktop/labRotation1_Anubh",pattern=i,full.names = T),header=T,sep="\t")
   
     clinical_data = t(read.table(list.files("~/Desktop/labRotation1_AnubhavK/Clinical_Firehose/",pattern=i,full.names = T),header=T,sep="\t",row.names = 1))[,-1]
   
