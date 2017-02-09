@@ -8,7 +8,7 @@ TCGA_Samples = c("BRCA","GBM","OV","LUAD","UCEC","KIRC","HNSC","LGG","THCA","LUS
 
 TCGA_Samples = TCGA_Samples[order(TCGA_Samples)]
 
-i = TCGA_Samples[2]
+i = TCGA_Samples[12]
 
 length(Differential_significant)
 venny = function(Coxph, mutation, Differential)
@@ -20,30 +20,24 @@ venny = function(Coxph, mutation, Differential)
   
   Differential_cancer = rownames(Differential_significant)
   
-  if(length(Differential_cancer != 0))
-  {
+  if(length(Differential_cancer > 0)){
     
     overlap = calculate.overlap(x = list("coxph_cancer" = coxph_cancer,"mutation_cancer" = mutation_cancer,"Differential_cancer" = Differential_cancer))
     
    venn_plot =  draw.triple.venn(area1 = length(coxph_cancer), area2 = length(mutation_cancer), area3 = length(Differential_cancer), n123 = length(overlap[[1]]), n12 = length(overlap[[2]])+length(overlap[[1]]), n13 = length(overlap[[3]])+length(overlap[[1]]),
       n23 = length(overlap[[4]])+length(overlap[[1]]), category = c("Expression_Survival", "Mutation_survival", "Differential_genes"), lty = "blank", fill = c("skyblue", "pink1", "mediumorchid"),scaled = F)  
    grid.arrange(gTree(children=venn_plot), top=colnames(Coxph_significant)[2])
-  }
-  
-  else
-  {
-    
+  } else{ 
     overlap1 = calculate.overlap(x = list("coxph_cancer" = coxph_cancer,"mutation_cancer" = mutation_cancer))
     
     #draw.pairwise.venn(area1 = length(coxph_cancer), area2 = length(mutation_cancer),cross.area = length(overlap1[[3]]),category = c("Expression_Survival", "Mutation_survival"),lty = "blank", fill = c("skyblue", "pink1")) 
     venny_plot = draw.pairwise.venn(area1 = length(coxph_cancer), area2 = length(mutation_cancer),cross.area = length(overlap1[[3]]),category = c("Expression_Survival", "Mutation_survival"),lty = "blank", fill = c("skyblue", "pink1"),cat.pos = c(0,0), cat.dist = rep(0.025,2),scaled = F)
     
     grid.arrange(gTree(children = venny_plot),top = colnames(Coxph_significant)[2])
-
   }
   
   
-}
+
 
 for ( i in TCGA_Samples)
 {
