@@ -35,9 +35,9 @@ venny = function(Coxph, mutation)
   
   common_expression_survival = common_expression_survival[order(common_expression_survival$expression_survival),]
 
-  write.csv(common_expression_survival, file = paste(colnames(Coxph_significant)[2],"_ranked_significant_genes_expressionSurvival.csv",sep=""))
+  write.csv(common_expression_survival, file = paste(colnames(Coxph_significant)[2],"_ranked_significant_genes_expressionSurvival.csv",sep=""),row.names = F)
   
-  write.csv(common_mutation_survival, file = paste(colnames(Coxph_significant)[2],"_ranked_significant_genes_MutationSurvival.csv",sep=""))
+  write.csv(common_mutation_survival, file = paste(colnames(Coxph_significant)[2],"_ranked_significant_genes_MutationSurvival.csv",sep=""),row.names = F)
   
   return(NULL)
 }
