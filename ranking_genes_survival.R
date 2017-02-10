@@ -4,12 +4,12 @@ TCGA_Samples = c("BRCA","GBM","OV","LUAD","UCEC","KIRC","HNSC","LGG","THCA","LUS
 
 TCGA_Samples = TCGA_Samples[order(TCGA_Samples)]
 
-venny = function(Coxph, mutation, Differential)
+venny = function(Coxph, mutation)
 {
   
-  coxph_cancer = as.character(Coxph_significant$X)
+  coxph_cancer = as.character(Coxph$X)
   
-  mutation_cancer = rownames(mutation_significant)
+  mutation_cancer = rownames(mutation)
 
   overlap1 = calculate.overlap(x = list("coxph_cancer" = coxph_cancer,"mutation_cancer" = mutation_cancer))
   
@@ -22,19 +22,25 @@ venny = function(Coxph, mutation, Differential)
     
   {
     expression_survival = c(expression_survival, Coxph_significant[Coxph_significant$X==i,2])
+    
     mutation_survival = c(mutation_survival, mutation_significant[i,])
     
   }
   
   common_expression_survival = cbind.data.frame(common_Expre_Mut_genes,expression_survival)
+  
   common_mutation_survival = cbind.data.frame(common_Expre_Mut_genes, mutation_survival)
+  
   common_mutation_survival = common_mutation_survival[order(common_mutation_survival$mutation_survival),]
+  
   common_expression_survival = common_expression_survival[order(common_expression_survival$expression_survival),]
 
-  write.csv(common_expression_survival, file = paste(colnames(Coxph_significant)[2],"ranked_significant_genes_expressionSurvival.csv",sep="")
-  write.csv(common_mutation_survival, file = paste(colnames(Coxph_significant)[2],"ranked_significant_genes_MutationSurvival.csv",sep="")
+  write.csv(common_expression_survival, file = paste(colnames(Coxph_significant)[2],"_ranked_significant_genes_expressionSurvival.csv",sep=""))
+  
+  write.csv(common_mutation_survival, file = paste(colnames(Coxph_significant)[2],"_ranked_significant_genes_MutationSurvival.csv",sep=""))
+  
   return(NULL)
-  }
+}
 
 #output_results = list()
 
@@ -46,6 +52,7 @@ for ( i in TCGA_Samples)
   
   mutation_significant = read.table(list.files("/media/pathway/48F918113AE39451/New_results/Significant_genes_mutation_survival",pattern=paste("Significant_",i,sep=""),full.names = T),sep="\t", row.names = 1)
   
+  results = venny(Coxph_significant, mutation_significant)
   #if (length(list.files("C:/Users/Anubhav/Desktop/Differential_analysis/New_results/Significant_genes_Differential_analysis",pattern=paste("Significant_",i,sep=""),full.names = T)))Differential_significant = read.table(list.files("C:/Users/Anubhav/Desktop/Differential_analysis/New_results/Significant_genes_Differential_analysis",pattern=paste("Significant_",i,sep=""),full.names = T),header=T,sep="\t",row.names =1)
   
 }
