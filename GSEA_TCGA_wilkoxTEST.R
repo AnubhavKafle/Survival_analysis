@@ -18,17 +18,19 @@ GSEA_test = function(expression_survival_common, mutation_survial_common)
     reduced_genes = pw_genes[[pw]]
     pw_ranks = apply(cbind(match(reduced_genes, as.character(expression_survival_common$common_Expre_Mut_genes)), match(reduced_genes, as.character(mutation_survival_common$common_Expre_Mut_genes))),1,sum)
     all_genes_ranks = apply(cbind(match(featured_genes, as.character(expression_survival_common$common_Expre_Mut_genes)), match(featured_genes, as.character(mutation_survival_common$common_Expre_Mut_genes))),1,sum)
-    rest_of_genes_ranks = all_genes_ranks[!all_genes_ranks %in% pw_ranks)]
-    if(!(length(pwranks) == 0)) {
+    rest_of_genes_ranks = all_genes_ranks[!all_genes_ranks %in% pw_ranks]
+    if(!(length(pw_ranks) == 0)) {
       wilcox_test = wilcox.test(pw_ranks,rest_of_genes_ranks,
                                 alternative="less")
-      W_pValue[count] = wilcox_test$p.value
-    } else { W_pValue[count] = 1 }
-    ###### WILCOX ENDE
+      W_pValue[pw] = wilcox_test$p.value
+    } else { W_pValue[pw] = 1 }
+    ####WILCOX ENDE
+    
+    q_val = p.adjust(W_pValue, method = "fdr")
+    
   }
+
   
-  
-}
 
 # split up info into pwnames, description and gene lists of same length
 load("fwdpwanalyses/pwgenes.RData")
