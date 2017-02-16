@@ -14,11 +14,13 @@ GSEA_test = function(expression_survival_common, mutation_survial_common)
   }
   
   W_pValue = list()
-  for ( pw in pwnames ) {
+  for ( pw in pw_names ) {
     reduced_genes = pw_genes[[pw]]
-    pw_ranks = apply(cbind(match(reduced_genes, expression_survival_common$common_Expre_Mut_genes), match(reduced_genes, mutation_survial_common$common_Expre_Mut_genes)),1,sum)
+    pw_ranks = apply(cbind(match(reduced_genes, as.character(expression_survival_common$common_Expre_Mut_genes)), match(reduced_genes, as.character(mutation_survival_common$common_Expre_Mut_genes))),1,sum)
+    all_genes_ranks = apply(cbind(match(featured_genes, as.character(expression_survival_common$common_Expre_Mut_genes)), match(featured_genes, as.character(mutation_survival_common$common_Expre_Mut_genes))),1,sum)
+    rest_of_genes_ranks = all_genes_ranks[!all_genes_ranks %in% pw_ranks)]
     if(!(length(pwranks) == 0)) {
-      wilcox_test = wilcox.test(pw_ranks,(1:length(expression_survival_common$common_Expre_Mut_genes))[-pwranks],
+      wilcox_test = wilcox.test(pw_ranks,rest_of_genes_ranks,
                                 alternative="less")
       W_pValue[count] = wilcox_test$p.value
     } else { W_pValue[count] = 1 }
