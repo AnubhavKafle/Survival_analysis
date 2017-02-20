@@ -130,9 +130,9 @@ for ( i in TCGA_Samples)
   hazard_ratio_matrix[[i]] = as.numeric(unlist(survival_results[3]))
 }  
 
-Gene_with_survival_adj.p_values = as.data.frame(p_value_gene_matrix) #Create a data frame from list 
+Gene_with_survival_p_values = as.data.frame(p_value_gene_matrix) #Create a data frame from list 
 
-rownames(Gene_with_survival_adj.p_values) = unlist(survival_results[2]) #Assign gene names to the dataframe
+rownames(Gene_with_survival_p_values) = unlist(survival_results[2]) #Assign gene names to the dataframe
 
 Genes_with_hazard_ratio =  as.data.frame(hazard_ratio_matrix)
 
@@ -140,6 +140,6 @@ rownames(Genes_with_hazard_ratio) = unlist(survival_results[2])
 
 write.table(Genes_with_hazard_ratio, file = "Genes_with_hazard_ratio.txt",sep = "\t", row.names = T)
 
-write.table(Gene_with_survival_adj.p_values, file = "Genes_with_adjPvalues.txt", sep = "\t", row.names = T)
+write.table(Gene_with_survival_p_values, file = "Genes_with_Pvalues.txt", sep = "\t", row.names = T)
 
 
