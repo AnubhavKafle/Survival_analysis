@@ -1,4 +1,7 @@
-TCGA_samples = c("ACC","BLCA","BRCA","CESC","CHOL","COAD","DLBC","ESCA","GBM","HNSC","KICH","KIRC","KIRP","LAML","LGG","LIHC","LUAD","LUSC","OV","PCPG","PRAD","READ","SARC","SKCM","STAD","TGCT","THCA","THYM","UCEC","UCS","UVM")
+########################################################################################
+# wrong way to set the rank. Code block below has the correct way. Ignore this code block.
+#########################################################################################
+"TCGA_samples = c("ACC","BLCA","BRCA","CESC","CHOL","COAD","DLBC","ESCA","GBM","HNSC","KICH","KIRC","KIRP","LAML","LGG","LIHC","LUAD","LUSC","OV","PCPG","PRAD","READ","SARC","SKCM","STAD","TGCT","THCA","THYM","UCEC","UCS","UVM")
 
 GSEA_test = function(expression_survival_common, mutation_survial_common)
 {
@@ -30,8 +33,6 @@ GSEA_test = function(expression_survival_common, mutation_survial_common)
     
   }
 
-  
-
 # split up info into pwnames, description and gene lists of same length
 load("fwdpwanalyses/pwgenes.RData")
 pathway_details=read.csv(file="fwdpwanalyses/pathways.csv")
@@ -49,11 +50,10 @@ for ( i in TCGA_Samples)
   wilcox_test_GSEA = GSEA_test(Expression_survival_pVal, Mutation_survival_pVal)
     
 }
-
-
-####################################################################################
-  #New way to set the ranks
-################################################# 
+"
+###########################################################################################
+  #New way to set the ranks. Done a trail on gene expression survival analysis output file. 
+###########################################################################################
   
 expression_survival = read.table("Genes_with_only_Pvalues_new_coxph.txt", header= T, sep= "\t", row.names = 1)
 expression_survival = expression_survival[-grep("^\\?",rownames(expression_survival)),]
@@ -92,15 +92,14 @@ for ( pw in pw_names ) {
   q_val = p.adjust(W_pValue, method = "fdr")
 }
 head(q_val)
-################################
+#############################################
+#GSEA Analysis on both gene expression and mutation survival output files . Ranking the genes by summing up each analysis rank and then ranking again.
 ##############################################
-#GSEA Analysis on both survival gene sets values ###########
-
 expression_survival = read.csv("/media/pathway/48F918113AE39451/New_results/Genes_with_only_Pvalues_new_coxph_expresion.txt",header=T, sep="\t",row.names = 1)
 mutation_survival = read.csv("/media/pathway/48F918113AE39451/New_results/Mutation_survival_onlyPval.csv",row.names = 1)
 expression_survival = expression_survival[-grep("^\\?",rownames(expression_survival)),]
 #ranks_acc = rank(mutation_survival$ACC)
-######################################
+###################################### Loading pathway knowledge
 load("/home/pathway/Desktop/labRotation1_AnubhavK/pathwaydata/fwdpwanalyses/pwgenes.RData")
 pathway_details=read.csv(file="/home/pathway/Desktop/labRotation1_AnubhavK/pathwaydata/fwdpwanalyses/pathways.csv")
 pw_names = as.character(pathway_details$pw)
