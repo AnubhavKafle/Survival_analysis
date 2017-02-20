@@ -79,13 +79,13 @@ for (i in 1:length(results_coxph))
   hazard_ratio = c(hazard_ratio, results_coxph[[i]][2])
 }
   
-p_values.adjusted = p.adjust(p_values, method = "BH")
+#p_values.adjusted = p.adjust(p_values, method = "BH")
   
 gene_names = names(results_coxph) #To extract all the gene names 
 
 for( ii in 1:length(gene_names))
 {
-  p_values_and_HazardRatio_geneName[[gene_names[ii]]] = c(p_values.adjusted[ii], hazard_ratio[ii])
+  p_values_and_HazardRatio_geneName[[gene_names[ii]]] = c(p_values[ii], hazard_ratio[ii])
   
   #hazard_ratio_geneName[[gene_names[ii]]] = hazard_ratio[ii]
   
