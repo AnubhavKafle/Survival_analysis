@@ -48,6 +48,7 @@ expression1 = t(read.table(list.files("~/Desktop/labRotation1_AnubhavK/gene_expr
 
 clinical = t(read.table(list.files("~/Desktop/labRotation1_AnubhavK/Clinical_Firehose/",pattern=i,full.names = T),header=T,sep="\t",row.names = 1))[,-1]
 ###########################################################################
+##########################################################################
 significant_genes =  read.csv("/home/pathway/Desktop/labRotation1_AnubhavK/New_results_pendrive_backup/significant_survival_ranked_Common_genes/ACC_ranked_significant_genes_expressionSurvival.csv")
 Significant_expression_matrix = matrix()
 index =c()
@@ -59,9 +60,9 @@ for (i in as.vector(significant_genes$common_Expre_Mut_genes)){
   value = grep(paste("^",i,"\\b",sep=""), as.vector(genes))
   if(length(value) == 1)index=c(value, index)#index = c(grep(i,as.vector(genes)),index)
   #Significant_expression_matrix = cbind(as.vector(expression_rna_ordered_log2_median[,grep(paste("^",i,sep = ""),colnames(expression_rna_ordered_log2_median))]),Significant_expression_matrix)
-   
+  
+  
 }
-
 index=index[order(index)]
 Significant_expression_matrix = as.data.frame(expression_rna_ordered_log2_median[,index])
 #####fitting parametric survival regression model on the data
@@ -72,7 +73,27 @@ Significant_expression_matrix = as.data.frame(expression_rna_ordered_log2_median
 
 #model_analysis = coxph(Surv(clinical_survival$death_years,clinical_survival$event) ~ ., data = expression_rna_ordered_log2_median) #P-value is 5th in the index of coefficient. Coxph model is used because of the continous event of gene expression
 #################3
-PAMR survival modelling 
-cancer_survival_pamr = list(x = t(Significant_expression_matrix), survival.time = clinical_survival$Survival_times,censoring.status = clinical_survival$event, genenames  = colnames(Significant_expression_matrix) )
+#PAMR survival modelling 
+test_data_expression  = Significant_expression_matrix[-(1:ceiling(length(rownames(Significant_expression_matrix))/2)),]
 
-survival_train_model = pamr.train(cancer_survival_pamr, ngroup.survival = 2)
+training_data_expression  = Significant_expression_matrix[1:ceiling(length(rownames(Significant_expression_matrix))/2),]
+
+clinical_survival_training = clinical_survival[(1:ceiling(length(rownames(clinical_survival))/2)),]
+
+clinical_survival_test = clinical_survival[-(1:ceiling(length(rownames(clinical_survival))/2)),]
+
+cancer_survival_training_pamr = list(x = as.matrix(t(training_data_expression)), survival.time = clinical_survival_training$Survival_times,censoring.status = clinical_survival_training$event, genenames  = colnames(training_data_expression) )
+
+cancer_survival_test_pamr = list(x = as.matrix(t(test_data_expression)), survival.time = clinical_survival_test$Survival_times,censoring.status = clinical_survival_test$event, genenames  = colnames(test_data_expression) )
+
+survival_train_model = pamr.train(cancer_survival_training_pamr, ngroup.survival = 4)
+
+survival_class = pamr.surv.to.class2(cancer_survival_test_pamr$survival.time, cancer_survival_test_pamr$censoring.status, n.class = survival_train_model$ngroup.survival)$prob
+
+#table(apply(survival_class, 1, function(x)which(x==max(x))))
+
+yhat = pamr.predict(survival_train_model, cancer_survival_pamr$x, threshold = 1.0)
+head(yhat)
+pamr.plotsurvival(yhat, cancer_survival_pamr$survival.time, cancer_survival_pamr$censoring.status)
+pamr.confusion.survival(survival_train_model, survival.time = cancer_survival_pamr$survival.time, cancer_survival_pamr$censoring.status,yhat)
+##################
